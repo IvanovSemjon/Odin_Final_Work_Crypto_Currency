@@ -156,10 +156,31 @@ def show_result(amount, fiat_currency, crypto_amount, crypto_name, crypto_price,
     result_window.configure(bg="white")
 
 def convert():
-    """Выполнение конвертации"""
+    """Выполнение конвертации с обязательными проверками ввода"""
     try:
-        # Получение данных из полей ввода
-        amount = float(amount_var.get())
+        # Проверка 1: Поле ввода суммы не пустое и содержит число
+        amount_str = amount_var.get().strip()
+        if not amount_str:
+            messagebox.showerror("Ошибка ввода", "Поле суммы не может быть пустым")
+            return
+        
+        # Преобразуем строку в число
+        amount = float(amount_str)
+        
+        # Проверка 2: Сумма должна быть больше нуля
+        if amount <= 0:
+            messagebox.showerror("Ошибка ввода", "Сумма должна быть больше нуля")
+            return
+        
+        # Проверка 3: Обязательно должна быть выбрана фиатная валюта
+        if fiat_var.get() == "--выберите валюту--" or not fiat_var.get():
+            messagebox.showerror("Ошибка выбора", "Обязательно выберите фиатную валюту")
+            return
+        
+        # Проверка 4: Обязательно должна быть выбрана криптовалюта
+        if crypto_var.get() == "--выберите криптовалюту--" or not crypto_var.get():
+            messagebox.showerror("Ошибка выбора", "Обязательно выберите криптовалюту")
+            return
         
         # Получаем ключи из выбранных значений
         fiat_key = list(fiat_currencies.keys())[list(fiat_currencies.values()).index(fiat_var.get())]
