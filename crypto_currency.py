@@ -29,47 +29,83 @@ cryptocurrencies = {
 
 # ТОП 20 самых популярных валют
 fiat_currencies = {
-    "usd": "USD - Доллар США",
-    "eur": "EUR - Евро",
-    "gbp": "GBP - Фунт стерлингов",
-    "jpy": "JPY - Японская иена",
-    "cny": "CNY - Китайский юань",
-    "aud": "AUD - Австралийский доллар",
-    "cad": "CAD - Канадский доллар",
-    "chf": "CHF - Швейцарский франк",
-    "hkd": "HKD - Гонконгский доллар",
-    "sgd": "SGD - Сингапурский доллар",
-    "sek": "SEK - Шведская крона",
-    "nok": "NOK - Норвежская крона",
-    "krw": "KRW - Южнокорейская вона",
-    "inr": "INR - Индийская рупия",
-    "brl": "BRL - Бразильский реал",
-    "rub": "RUB - Российский рубль",
-    "try": "TRY - Турецкая лира",
-    "zar": "ZAR - Южноафриканский рэнд",
-    "mxn": "MXN - Мексиканский песо",
-    "pln": "PLN - Польский злотый"
+    "usd": "Доллар США (USD)",
+    "eur": "Евро (EUR)",
+    "gbp": "Фунт стерлингов (GBP)",
+    "jpy": "Японская иена (JPY)",
+    "cny": "Китайский юань (CNY)",
+    "aud": "Австралийский доллар (AUD)",
+    "cad": "Канадский доллар (CAD)",
+    "chf": "Швейцарский франк (CHF)",
+    "hkd": "Гонконгский доллар (HKD)",
+    "sgd": "Сингапурский доллар (SGD)",
+    "sek": "Шведская крона (SEK)",
+    "nok": "Норвежская крона (NOK)",
+    "krw": "Южнокорейская вона (KRW)",
+    "inr": "Индийская рупия (INR)",
+    "brl": "Бразильский реал (BRL)",
+    "rub": "Российский рубль (RUB)",
+    "try": "Турецкая лира (TRY)",
+    "zar": "Южноафриканский рэнд (ZAR)",
+    "mxn": "Мексиканский песо (MXN)",
+    "pln": "Польский злотый (PLN)"
 }
 
 
 def get_crypto_price(crypto_id, vs_currency):
-    """Получение цены криптовалюты через CoinGecko API"""
+    """
+    Получение актуальных данных о криптовалюте через бесплатный CoinGecko API
+    
+    Параметры:
+        crypto_id (str): Уникальный идентификатор криптовалюты в системе CoinGecko
+                        (например: 'bitcoin', 'ethereum', 'cardano')
+        vs_currency (str): Код фиатной валюты для сравнения
+                          (например: 'usd', 'eur', 'rub')
+    
+    Возвращает:
+        dict: JSON-объект с данными о криптовалюте или None при ошибке
+    """
     try:
+        # Базовый URL для CoinGecko API - эндпоинт для получения простых цен
+        # Этот эндпоинт позволяет получить цены многих криптовалют одновременно
         url = "https://api.coingecko.com/api/v3/simple/price"
+        
+        # Параметры запроса к API - определяют, какие данные мы хотим получить
         params = {
+            # Идентификатор криптовалюты (можно указать несколько через запятую)
             "ids": crypto_id,
+            # Валюта для отображения цен (можно указать несколько через запятую)
             "vs_currencies": vs_currency,
+            # Включаем в ответ данные о рыночной капитализации
             "include_market_cap": "true",
+            # Включаем в ответ данные о объеме торгов за 24 часа
             "include_24hr_vol": "true",
+            # Включаем в ответ данные об изменении цены за 24 часа (в процентах)
             "include_24hr_change": "true"
         }
         
+        # Отправляем HTTP GET-запрос к API
+        # timeout=10 - максимальное время ожидания ответа (10 секунд)
+        # params - параметры автоматически преобразуются в URL query string
         response = requests.get(url, params=params, timeout=10)
+        
+        # Проверяем статус ответа - вызывает исключение при ошибках HTTP
+        # (например, 404 Not Found, 500 Internal Server Error и т.д.)
         response.raise_for_status()
+        
+        # Преобразуем JSON-ответ в Python-словарь и возвращаем его
+        # Ответ содержит все запрошенные данные: цену, капитализацию, объем и изменения
         return response.json()
         
     except Exception as e:
-        print(f"Ошибка получения данных: {e}")
+        # Обработка всех возможных ошибок:
+        # - Ошибки сети (нет интернета, недоступен сервер)
+        # - HTTP ошибки (404, 500, 429 - превышен лимит запросов)
+        # - Ошибки парсинга JSON (некорректный ответ от сервера)
+        # - Timeout ошибки (сервер не отвечает в течение 10 секунд)
+        print(f"Ошибка получения данных о криптовалюте: {e}")
+        # Возвращаем None, чтобы сигнализировать о неудаче операции
+        # Вызывающая функция должна проверить это значение и обработать ошибку
         return None
 
 
@@ -77,32 +113,33 @@ def show_result(amount, fiat_currency, crypto_amount, crypto_name, crypto_price,
     """Показать окно с результатом конвертации"""
     result_window = tk.Toplevel(root)
     result_window.title("Результат конвертации")
-    result_window.geometry("400x300")
+    result_window.geometry("600x300")
     
     # Основной фрейм
     frame = tk.Frame(result_window, bg="white", padx=20, pady=20)
     frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
     
     # Заголовок
-    title = tk.Label(frame, text="Результат конвертации", font=("Arial", 14, "bold"), bg="white", fg="#05658F")
+    title = tk.Label(frame, text="Результат конвертации", font=("Arial", 14, "bold"), bg="white", fg="black")
     title.grid(row=0, column=0, columnspan=2, pady=(0, 20))
     
     # Основной результат
-    result_text = f"{amount:,.2f} {fiat_currency.upper()} = {crypto_amount:,.8f} {crypto_name}"
+    result_text = f"{amount:,.2f} {fiat_currencies[fiat_currency.lower()]} = {crypto_amount:,.8f} {crypto_name}"
     result_label = tk.Label(frame, text=result_text, font=("Arial", 12), bg="white", fg="#05658F")
     result_label.grid(row=1, column=0, columnspan=2, pady=10)
     
     # Дополнительная информация о криптовалюте
     crypto_data = price_data[crypto_name.split()[0].lower()]
+    print(crypto_data)
     
     info_text = f"""
-Текущая цена: {crypto_price:,.2f} {fiat_currency.upper()}
+Стоимость за один {crypto_name} равняется {crypto_price:,.2f} {fiat_currencies[fiat_currency.lower()]}
 
-Рыночная капитализация: {crypto_data.get(f'{fiat_currency}_market_cap', 0):,.0f} {fiat_currency.upper()}
+Рыночная капитализация криптовалюты : {crypto_data.get(f'{fiat_currency}_market_cap', 0):,.0f} {fiat_currencies[fiat_currency.lower()]}
 
-Объем за 24ч: {crypto_data.get(f'{fiat_currency}_24h_vol', 0):,.0f} {fiat_currency.upper()}
+Объем торгов криптовалюты на бирже за 24ч: {crypto_data.get(f'{fiat_currency}_24h_vol', 0):,.0f} {fiat_currencies[fiat_currency.lower()]}
 
-Изменение за 24ч: {crypto_data.get(f'{fiat_currency}_24h_change', 0):+.2f}%
+Изменение стоимости криптовалюты за последние 24ч: {crypto_data.get(f'{fiat_currency}_24h_change', 0):+.2f}%
     """
     
     info_label = tk.Label(frame, text=info_text.strip(), justify=tk.LEFT, bg="white", fg="#05658F")
