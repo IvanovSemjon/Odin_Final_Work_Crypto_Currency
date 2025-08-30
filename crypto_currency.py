@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 
-# ТОП 20 популярных валют по версии CoinGecko API
+# ТОП 20 популярных криптовалют по версии CoinGecko API
 cryptocurrencies = {
     "bitcoin": "Bitcoin (BTC)",
     "ethereum": "Ethereum (ETH)",
