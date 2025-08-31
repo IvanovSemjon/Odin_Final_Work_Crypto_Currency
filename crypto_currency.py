@@ -1,10 +1,10 @@
 # Импорт необходимых библиотек
-import requests  # Для HTTP-запросов к CoinGecko API
-import tkinter as tk  # Основная библиотека для GUI
-from tkinter import ttk, messagebox  # Стилизованные виджеты и диалоги
-from PIL import Image, ImageTk  # Для работы с изображениями
+import requests
+import tkinter as tk
+from tkinter import ttk, messagebox
+from PIL import Image, ImageTk
 
-# Словарь поддерживаемых криптовалют
+# Словарь ТОП 15 поддерживаемых криптовалют
 cryptocurrencies = {
     "bitcoin": "Bitcoin (BTC)",
     "ethereum": "Ethereum (ETH)",
@@ -20,12 +20,10 @@ cryptocurrencies = {
     "wrapped-bitcoin": "Wrapped Bitcoin (WBTC)",
     "litecoin": "Litecoin (LTC)",
     "bitcoin-cash": "Bitcoin Cash (BCH)",
-    "dai": "Dai (DAI)",
-    "uniswap": "Uniswap (UNI)",
-    "cosmos": "Cosmos (ATOM)"
+    "dai": "Dai (DAI)"
 }
 
-# Словарь поддерживаемых фиатных валют
+# Словарь ТОП 15 поддерживаемых фиатных валют
 fiat_currencies = {
     "usd": "Доллар США (USD)",
     "eur": "Евро (EUR)",
@@ -41,9 +39,7 @@ fiat_currencies = {
     "nok": "Норвежская крона (NOK)",
     "krw": "Южнокорейская вона (KRW)",
     "inr": "Индийская рупия (INR)",
-    "brl": "Бразильский реал (BRL)",
     "rub": "Российский рубль (RUB)",
-    "try": "Турецкая лира (TRY)",
 }
 
 
@@ -100,7 +96,6 @@ def show_result(amount, fiat_currency, crypto_amount, crypto_name, crypto_price,
 
 Изменение стоимости за последние 24ч = {crypto_data.get(f'{fiat_currency}_24h_change', 0):+.2f}%
     """
-    
     info_label = tk.Label(frame, text=info_text.strip(), justify=tk.LEFT, bg="white", fg="#05658F")
     info_label.grid(row=2, column=0, columnspan=2, pady=10)
     
@@ -265,7 +260,7 @@ style.map('Custom.TButton',
 root.option_add('*TCombobox*Listbox.background', 'white')
 root.option_add('*TCombobox*Listbox.selectBackground', '#05658F')
 
-# Глобальные переменные
+# Дефолтные значения в полях
 amount_var = tk.StringVar(value="100")
 fiat_var = tk.StringVar(value="--выберите валюту--")
 crypto_var = tk.StringVar(value="--выберите криптовалюту--")
