@@ -2,7 +2,6 @@
 import requests
 import tkinter as tk
 from tkinter import ttk, messagebox
-from PIL import Image, ImageTk
 
 
 # Словарь ТОП 15 поддерживаемых криптовалют
@@ -170,16 +169,10 @@ def setup_ui():
     main_frame = tk.Frame(root, bg="white", padx=20, pady=20)
     main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
     
-    # Логотип
-    logo_image = ImageTk.PhotoImage(Image.open("logo.jpg").resize((50, 50)))
-    logo_label = tk.Label(main_frame, image=logo_image, bg="white")
-    logo_label.image = logo_image  # Сохраняем ссылку
-    logo_label.grid(row=0, column=0, padx=(0, 10), pady=(0, 20))
-
     # Заголовок
     title_label = tk.Label(main_frame, text="Конвертер криптовалюты", 
                            font=("Arial", 16, "bold"), bg="white")
-    title_label.grid(row=0, column=1, columnspan=1, pady=(0, 20), sticky=tk.W)
+    title_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
     
     # Поле ввода суммы
     tk.Label(main_frame, text="Укажите сумму для расчета:", bg="white").grid(row=1, column=0, sticky=tk.W, pady=5)
