@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 
+
 # Словарь ТОП 15 поддерживаемых криптовалют
 cryptocurrencies = {
     "bitcoin": "Bitcoin (BTC)",
@@ -87,6 +88,8 @@ def show_result(amount, fiat_currency, crypto_amount, crypto_name, crypto_price,
     # Дополнительная информация
     crypto_data = price_data[crypto_name.split()[0].lower()]
     
+
+    # Дополнительная информация по выбранной криптовалюте
     info_text = f"""
 Стоимость одного {crypto_name} = {crypto_price:,.2f} {fiat_currencies[fiat_currency.lower()]}
 
@@ -96,10 +99,12 @@ def show_result(amount, fiat_currency, crypto_amount, crypto_name, crypto_price,
 
 Изменение стоимости за последние 24ч = {crypto_data.get(f'{fiat_currency}_24h_change', 0):+.2f}%
     """
+
+    
     info_label = tk.Label(frame, text=info_text.strip(), justify=tk.LEFT, bg="white", fg="#05658F")
     info_label.grid(row=2, column=0, columnspan=2, pady=10)
     
-    # Кнопка закрытия
+    # Кнопка закрытия результирующего окна
     close_btn = ttk.Button(frame, text="Закрыть", command=result_window.destroy, style='Custom.TButton')
     close_btn.grid(row=3, column=0, columnspan=2, pady=20)
     
@@ -120,7 +125,6 @@ def convert():
             return
         
         amount = float(amount_str)
-        
         if amount <= 0:
             messagebox.showerror("Ошибка ввода", "Сумма должна быть больше нуля")
             return
@@ -152,7 +156,8 @@ def convert():
         # Показ результата
         show_result(amount, fiat_key, crypto_amount, 
                    cryptocurrencies[crypto_key], crypto_price, price_data)
-             
+
+        # Вывод информации исключений     
     except ValueError:
         messagebox.showerror("Ошибка", "Введите корректную сумму")
     except Exception as e:
@@ -195,7 +200,7 @@ def setup_ui():
                                state="readonly", width=25, style='Custom.TCombobox')
     crypto_combo.grid(row=3, column=1, sticky=(tk.W, tk.E), pady=5, padx=(10, 0))
 
-    # Инструкция
+    # Инструкция для пользователя
     tk.Label(main_frame,
               text="""
 - в поле "Укажите сумму для расчета:" введите положительное число;
